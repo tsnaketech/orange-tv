@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Fire OS 8 (Android 11) lacks two public roots used by Orange Romania (tvgo.orange.ro, www.orange.ro ->
+     Sectigo R46; solocoo.tv API -> GlobalSign R46): the WebView then fails with ERR_CERT_AUTHORITY_INVALID.
+     They are added next to the system roots, nothing else changes.
+     sectigo_r46.pem   SHA-256 7BB647A62AEEAC88BF257AA522D01FFEA395E0AB45C73F93F65654EC38F25A06
+     globalsign_r46.pem SHA-256 4FA3126D8D3A11D1C4855A4F807CBAD6CF919D3A5A88B03BEA2C6372D93C40C9 -->
+<network-security-config>
+    <base-config>
+        <trust-anchors>
+            <certificates src="system" />
+            <certificates src="@raw/sectigo_r46" />
+            <certificates src="@raw/globalsign_r46" />
+        </trust-anchors>
+    </base-config>
+    <!-- orangetvgo.be does not send its intermediate certificate; desktop browsers fetch it themselves, Android
+         does not (ERR_CERT_AUTHORITY_INVALID). Trusted for that domain only (issued by DigiCert Global Root G2).
+         digicert_g2_tls_2020_ca1.pem SHA-256 C8025F9FC65FDFC95B3CA8CC7867B9A587B5277973957917463FC813D0B625A9 -->
+    <domain-config>
+        <domain includeSubdomains="false">orangetvgo.be</domain>
+        <trust-anchors>
+            <certificates src="system" />
+            <certificates src="@raw/digicert_g2_tls_2020_ca1" />
+        </trust-anchors>
+    </domain-config>
+</network-security-config>
