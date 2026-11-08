@@ -1,5 +1,6 @@
-# Builds the signed release APK and publishes it as a GitHub release (tag v<versionName>).
-# Manual only: Actions > Release APK > Run workflow. Bump versionCode/versionName first: an existing tag fails.
+# Builds the signed release APK and publishes it as a GitHub release (tag v<appVersion>, e.g. v2.0.1).
+# Manual only: Actions > Release APK > Run workflow. Bump appVersion in app/build.gradle.kts first:
+# an existing tag fails.
 # Needs the 4 secrets described in AGENTS.md ("Release").
 name: Release APK
 
@@ -46,7 +47,7 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          version=$(sed -n 's/.*versionName = "\(.*\)".*/\1/p' app/build.gradle.kts)
+          version=$(sed -n 's/^val appVersion = "\(.*\)".*/\1/p' app/build.gradle.kts)
           apk="orange-tv-$version.apk"
           cp app/build/outputs/apk/release/app-release.apk "$apk"
           gh release create "v$version" "$apk" \
