@@ -3,6 +3,17 @@ plugins {
     id("org.jetbrains.kotlin.android")
 }
 
+// Version MAJOR.MINOR.PATCH: the only number to change for a release. versionCode follows it (2.0.0 -> 20000),
+// so it always grows with the version.
+// shortcut: MINOR and PATCH must stay below 100; widen the multipliers if that day comes.
+val appVersion = "2.0.0"
+val appVersionCode = Regex("""(\d+)\.(\d+)\.(\d+)""").matchEntire(appVersion)?.destructured
+    ?.let { (major, minor, patch) ->
+        require(minor.toInt() < 100 && patch.toInt() < 100) { "MINOR and PATCH must be below 100: $appVersion" }
+        major.toInt() * 10000 + minor.toInt() * 100 + patch.toInt()
+    }
+    ?: error("appVersion must look like 2.0.0, not $appVersion")
+
 android {
     namespace = "io.github.tsnaketech.orangetv"
     compileSdk = 35
@@ -11,8 +22,8 @@ android {
         applicationId = "io.github.tsnaketech.orangetv"
         minSdk = 25 // Fire OS 6+; the tested Fire TV is on API 30
         targetSdk = 35
-        versionCode = 5
-        versionName = "2.0"
+        versionCode = appVersionCode
+        versionName = appVersion
     }
 
     // Release signing only where the keystore is given (the release workflow, from GitHub secrets);
