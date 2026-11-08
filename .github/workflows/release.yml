@@ -1,4 +1,5 @@
-# Builds the signed release APK and publishes it as a GitHub release (tag v<appVersion>, e.g. v2.0.1).
+# Builds the signed release APK and publishes it as a GitHub release (tag v<appVersion>, e.g. v2.0.1), as
+# orange-tv-<appVersion>.apk and orange-tv.apk.
 # Manual only: Actions > Release APK > Run workflow. Bump appVersion in app/build.gradle.kts first:
 # an existing tag fails.
 # Needs the 4 secrets described in AGENTS.md ("Release").
@@ -39,9 +40,7 @@ jobs:
           SIGNING_STORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
           SIGNING_KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
           SIGNING_KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
-        run: |
-          chmod +x gradlew
-          ./gradlew testDebugUnitTest assembleRelease
+        run: ./gradlew testDebugUnitTest assembleRelease
 
       - name: Publish the release
         env:
@@ -50,7 +49,10 @@ jobs:
           version=$(sed -n 's/^val appVersion = "\(.*\)".*/\1/p' app/build.gradle.kts)
           apk="orange-tv-$version.apk"
           cp app/build/outputs/apk/release/app-release.apk "$apk"
-          gh release create "v$version" "$apk" \
+          # Same APK under a fixed name: .../releases/latest/download/orange-tv.apk always gives the newest one
+          # (the link typed on the TV, in the Downloader app).
+          cp "$apk" orange-tv.apk
+          gh release create "v$version" "$apk" orange-tv.apk \
             --title "Orange TV $version" \
             --target "$GITHUB_SHA" \
             --generate-notes

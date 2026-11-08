@@ -28,7 +28,34 @@ Tested on Fire TV Stick 4K Max (Fire OS 8). Should work on Android TV / Google T
 
 ## Installation
 
-Requirements: Android Studio, `adb`, ADB debugging enabled on the TV.
+**Straight on the TV, no PC:**
+
+1. Install the **Downloader** app (Amazon Appstore).
+2. Let Downloader install apps: Settings > My Fire TV > Developer Options > Install unknown apps > Downloader (if the menu is missing: My Fire TV > About, click the device name 7 times).
+3. In Downloader, enter this short link, then Install:
+
+   ```
+   is.gd/orangetvapk
+   ```
+
+   **Before installing, check where it leads:** open `is.gd/orangetvapk-` (with a dash at the end), in Downloader or a browser. The "Shortened link" page must show exactly:
+
+   ```
+   https://github.com/tsnaketech/orange-tv/releases/latest/download/orange-tv.apk
+   ```
+
+   If it shows anything else, do not install. The full link above also works directly in Downloader.
+
+The link always gives the latest version. To update, repeat step 3: the session is kept.
+
+**From a PC:** Download `orange-tv-<version>.apk` from the [Releases](https://github.com/tsnaketech/orange-tv/releases/latest), enable ADB debugging on the TV, then:
+
+```powershell
+adb connect <TV IP>:5555
+adb install -r orange-tv-<version>.apk
+```
+
+From source (developers): requires Android Studio. The debug build installs next to the release, as "Orange TV (debug)". Requirements: Android Studio, `adb`, ADB debugging enabled on the TV.
 
 ```powershell
 $env:JAVA_HOME = "C:\Program Files\Android\Android Studio\jbr"

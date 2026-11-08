@@ -43,9 +43,9 @@ Windows, PowerShell. `adb` is installed by winget (not in the PATH of terminals 
 ```powershell
 $env:JAVA_HOME = "C:\Program Files\Android\Android Studio\jbr"
 .\gradlew.bat testDebugUnitTest      # tests
-.\gradlew.bat installDebug           # build + install on the connected TV
+.\gradlew.bat installDebug           # build + install "Orange TV (debug)" on every connected device
 adb connect <TV_IP>:5555             # Fire TV IP on the local network (Settings > My Fire TV > About > Network)
-adb shell am start -n io.github.tsnaketech.orangetv/.MainActivity
+adb shell am start -n io.github.tsnaketech.orangetv.debug/io.github.tsnaketech.orangetv.MainActivity
 adb logcat -s TvWeb                  # received keys (Log.i "touche KEYCODE_…")
 ```
 
@@ -59,7 +59,9 @@ python tools/make_banner.py
 ## Release
 
 `.github/workflows/release.yml`, run by hand only (GitHub > Actions > Release APK > Run workflow): runs the tests,
-builds the signed release APK and publishes it as release `v<appVersion>` with `orange-tv-<appVersion>.apk`.
+builds the signed release APK and publishes it as release `v<appVersion>` with `orange-tv-<appVersion>.apk`, plus
+the same file as `orange-tv.apk`: the READMEs give `.../releases/latest/download/orange-tv.apk` to type in the
+Downloader app on the TV, so that fixed name must stay.
 
 Versioning: `appVersion = "MAJOR.MINOR.PATCH"` at the top of `app/build.gradle.kts` is the only number to change
 (PATCH: fix, MINOR: new feature, MAJOR: big change). `versionName` is that string and `versionCode` is derived from
@@ -77,8 +79,8 @@ powershell -ExecutionPolicy Bypass -File tools/release-secrets.ps1
 
 - Keep `orangetv-release.jks` and its passwords outside the repo, backed up: without them, no later version can
   be installed over the current one (Android requires the same signature).
-- A release APK has another signature than local debug builds: switching the TV from one to the other needs an
-  uninstall, which erases the Orange session.
+- Debug builds are `io.github.tsnaketech.orangetv.debug` ("Orange TV (debug)"), releases
+  `io.github.tsnaketech.orangetv`: they install side by side, each with its own Orange session and site choice.
 - Locally, `assembleRelease` fails in `lintVitalAnalyzeRelease` with Android Studio's Java 25 (AGP 8.7 lint);
   the workflow uses Java 17. Without the `SIGNING_*` variables the local release APK is unsigned.
 
@@ -89,8 +91,9 @@ There is no Fire TV emulator: verify on the real TV.
 - `adb shell input keyevent <code>` to simulate the remote (19/20/21/22 arrows, 23 OK, 4 Back,
   89/90 ⏪/⏩, 166/167 channel ±).
 - Screenshot: `adb shell screencap -p /sdcard/c.png` then `adb pull /sdcard/c.png`.
-- Page state: `adb forward tcp:9222 localabstract:webview_devtools_remote_<pid>` then
-  `node tools/cdp.mjs query.js` (the debug build enables WebView debugging).
+- Page state: `adb forward tcp:9222 localabstract:webview_devtools_remote_<pid>` (pid from
+  `adb shell pidof io.github.tsnaketech.orangetv.debug`) then `node tools/cdp.mjs query.js` (only the debug build
+  enables WebView debugging).
 
 ## Known pitfalls
 

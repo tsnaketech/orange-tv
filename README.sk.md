@@ -28,7 +28,34 @@ ovládačom. Testované na Fire TV Stick 4K Max (Fire OS 8). Mala by fungovať n
 
 ## Inštalácia
 
-Potrebné: Android Studio, `adb`, zapnuté ladenie ADB na televízore.
+**Priamo na televízore, bez počítača:**
+
+1. Nainštalujte aplikáciu **Downloader** (Amazon Appstore).
+2. Povoľte Downloaderu inštalovať aplikácie: Nastavenia > Môj Fire TV > Možnosti pre vývojárov > Inštalovať neznáme aplikácie > Downloader (ak menu chýba: Môj Fire TV > Informácie, 7-krát kliknite na názov zariadenia).
+3. V Downloaderi zadajte tento krátky odkaz a potom Inštalovať:
+
+   ```
+   is.gd/orangetvapk
+   ```
+
+   **Pred inštaláciou overte, kam vedie:** otvorte `is.gd/orangetvapk-` (s pomlčkou na konci) v Downloaderi alebo prehliadači. Stránka „Shortened link“ musí zobraziť presne:
+
+   ```
+   https://github.com/tsnaketech/orange-tv/releases/latest/download/orange-tv.apk
+   ```
+
+   Ak zobrazí niečo iné, neinštalujte. Úplný odkaz vyššie funguje aj priamo v Downloaderi.
+
+Odkaz vždy ponúkne najnovšiu verziu. Aktualizácia: zopakujte krok 3, relácia sa zachová.
+
+**Z počítača:** Stiahnite `orange-tv-<version>.apk` z [Releases](https://github.com/tsnaketech/orange-tv/releases/latest), zapnite ladenie ADB na televízore a potom:
+
+```powershell
+adb connect <IP televízora>:5555
+adb install -r orange-tv-<version>.apk
+```
+
+Zo zdrojového kódu (vývojári): potrebné Android Studio. Debug verzia sa nainštaluje vedľa release verzie ako „Orange TV (debug)“. Potrebné: Android Studio, `adb`, zapnuté ladenie ADB na televízore.
 
 ```powershell
 $env:JAVA_HOME = "C:\Program Files\Android\Android Studio\jbr"
