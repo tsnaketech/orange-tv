@@ -1,5 +1,5 @@
 // Evaluates a JS expression in the TV's WebView via the DevTools protocol (debug build only).
-// Setup:  adb forward tcp:9222 localabstract:webview_devtools_remote_<pid of io.github.tsnaketech.orangetv>
+// Setup:  adb forward tcp:9222 localabstract:webview_devtools_remote_<pid of io.github.tsnaketech.orangetv.debug>
 // Usage:  node tools/cdp.mjs <file.js>
 import { readFileSync } from 'node:fs';
 const expr = readFileSync(process.argv[2], 'utf8');

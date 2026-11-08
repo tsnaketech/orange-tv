@@ -40,6 +40,8 @@ android {
     }
     buildTypes {
         release { signingConfig = signingConfigs.findByName("release") }
+        // Own app id: the debug build installs next to the signed release on the TV, each with its own session.
+        debug { applicationIdSuffix = ".debug" }
     }
 
     compileOptions {

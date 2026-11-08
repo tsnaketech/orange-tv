@@ -28,7 +28,34 @@ Testată pe Fire TV Stick 4K Max (Fire OS 8). Ar trebui să funcționeze pe Andr
 
 ## Instalare
 
-Necesar: Android Studio, `adb`, depanarea ADB activată pe televizor.
+**Direct pe televizor, fără PC:**
+
+1. Instalează aplicația **Downloader** (Amazon Appstore).
+2. Permite-i lui Downloader să instaleze aplicații: Setări > My Fire TV > Opțiuni pentru dezvoltatori > Instalează aplicații necunoscute > Downloader (dacă meniul lipsește: My Fire TV > Despre, apasă de 7 ori pe numele dispozitivului).
+3. În Downloader, introdu acest link scurt, apoi Instalează:
+
+   ```
+   is.gd/orangetvapk
+   ```
+
+   **Înainte de instalare, verifică unde duce:** deschide `is.gd/orangetvapk-` (cu o liniuță la final), în Downloader sau într-un browser. Pagina „Shortened link” trebuie să afișeze exact:
+
+   ```
+   https://github.com/tsnaketech/orange-tv/releases/latest/download/orange-tv.apk
+   ```
+
+   Dacă afișează altceva, nu instala. Linkul complet de mai sus funcționează și direct în Downloader.
+
+Linkul oferă mereu ultima versiune. Pentru actualizare, repetă pasul 3: sesiunea se păstrează.
+
+**De pe un PC:** Descarcă `orange-tv-<version>.apk` din [Releases](https://github.com/tsnaketech/orange-tv/releases/latest), activează depanarea ADB pe televizor, apoi:
+
+```powershell
+adb connect <IP-ul televizorului>:5555
+adb install -r orange-tv-<version>.apk
+```
+
+Din codul sursă (dezvoltatori): necesită Android Studio. Versiunea debug se instalează lângă release, ca „Orange TV (debug)”. Necesar: Android Studio, `adb`, depanarea ADB activată pe televizor.
 
 ```powershell
 $env:JAVA_HOME = "C:\Program Files\Android\Android Studio\jbr"

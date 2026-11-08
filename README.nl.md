@@ -28,7 +28,34 @@ Getest op Fire TV Stick 4K Max (Fire OS 8). Zou moeten werken op Android TV / Go
 
 ## Installatie
 
-Vereist: Android Studio, `adb`, ADB-foutopsporing ingeschakeld op de tv.
+**Rechtstreeks op de tv, zonder pc:**
+
+1. Installeer de app **Downloader** (Amazon Appstore).
+2. Sta Downloader toe apps te installeren: Instellingen > Mijn Fire TV > Opties voor ontwikkelaars > Onbekende apps installeren > Downloader (ontbreekt het menu: Mijn Fire TV > Over, klik 7 keer op de apparaatnaam).
+3. Voer in Downloader deze korte link in en kies Installeren:
+
+   ```
+   is.gd/orangetvapk
+   ```
+
+   **Controleer vóór het installeren waar hij naartoe gaat:** open `is.gd/orangetvapk-` (met een streepje aan het eind), in Downloader of een browser. De pagina "Shortened link" moet precies dit tonen:
+
+   ```
+   https://github.com/tsnaketech/orange-tv/releases/latest/download/orange-tv.apk
+   ```
+
+   Staat er iets anders, installeer dan niet. De volledige link hierboven werkt ook rechtstreeks in Downloader.
+
+De link geeft altijd de nieuwste versie. Bijwerken: stap 3 herhalen, de sessie blijft behouden.
+
+**Vanaf een pc:** Download `orange-tv-<version>.apk` bij de [Releases](https://github.com/tsnaketech/orange-tv/releases/latest), schakel ADB-foutopsporing in op de tv en daarna:
+
+```powershell
+adb connect <IP van de tv>:5555
+adb install -r orange-tv-<version>.apk
+```
+
+Vanaf de broncode (ontwikkelaars): Android Studio vereist. De debug-build wordt naast de release geïnstalleerd, als "Orange TV (debug)". Vereist: Android Studio, `adb`, ADB-foutopsporing ingeschakeld op de tv.
 
 ```powershell
 $env:JAVA_HOME = "C:\Program Files\Android\Android Studio\jbr"
