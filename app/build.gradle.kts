@@ -15,6 +15,22 @@ android {
         versionName = "2.0"
     }
 
+    // Release signing only where the keystore is given (the release workflow, from GitHub secrets);
+    // elsewhere assembleRelease gives an unsigned APK and debug builds are unchanged.
+    signingConfigs {
+        System.getenv("SIGNING_KEYSTORE")?.let { path ->
+            create("release") {
+                storeFile = file(path)
+                storePassword = System.getenv("SIGNING_STORE_PASSWORD")
+                keyAlias = System.getenv("SIGNING_KEY_ALIAS")
+                keyPassword = System.getenv("SIGNING_KEY_PASSWORD")
+            }
+        }
+    }
+    buildTypes {
+        release { signingConfig = signingConfigs.findByName("release") }
+    }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17

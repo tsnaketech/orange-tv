@@ -55,6 +55,30 @@ python tools/make_icon.py
 python tools/make_banner.py
 ```
 
+## Release
+
+`.github/workflows/release.yml`, run by hand only (GitHub > Actions > Release APK > Run workflow): runs the tests,
+builds the signed release APK and publishes it as release `v<versionName>` with `orange-tv-<versionName>.apk`.
+Bump `versionCode` and `versionName` in `app/build.gradle.kts` first: a tag that already exists makes it fail.
+
+One-time setup, done by the repo owner (the keystore and its passwords never go in the repo):
+
+```powershell
+& "C:\Program Files\Android\Android Studio\jbr\bin\keytool.exe" -genkeypair -keystore orangetv-release.jks `
+  -alias orangetv -keyalg RSA -keysize 4096 -validity 10000
+gh secret set KEYSTORE_BASE64 -b ([Convert]::ToBase64String([IO.File]::ReadAllBytes("orangetv-release.jks")))
+gh secret set KEYSTORE_PASSWORD   # prompts for the value
+gh secret set KEY_ALIAS -b orangetv
+gh secret set KEY_PASSWORD
+```
+
+- Keep `orangetv-release.jks` and its passwords outside the repo, backed up: without them, no later version can
+  be installed over the current one (Android requires the same signature).
+- A release APK has another signature than local debug builds: switching the TV from one to the other needs an
+  uninstall, which erases the Orange session.
+- Locally, `assembleRelease` fails in `lintVitalAnalyzeRelease` with Android Studio's Java 25 (AGP 8.7 lint);
+  the workflow uses Java 17. Without the `SIGNING_*` variables the local release APK is unsigned.
+
 ## Verifying a change
 
 There is no Fire TV emulator: verify on the real TV.
